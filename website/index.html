@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Js App</title>
+    <link rel="stylesheet" href="style/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+    <h1 id="top-page" class="text-center mb-5" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">News App</h1>
+
+    <div class="container d-grid gap-2">
+        <input id="title" type="text" class="form-control" placeholder="Enter News title*">
+        <textarea id="content" rows="5" type="text" class="form-control" placeholder="Enter News contetn*"></textarea>
+        <button id="add" class="btn btn-primary mt-4" type="button" onclick="addNews()">Add</button>
+        <button id="update" class="btn btn-info mt-4 d-none" type="button" onclick="updateOnServer()">Update</button>
+        <button id="cancel" class="btn btn-danger d-none" type="button" onclick="cancelUpdate()">Cancel</button>
+    </div>
+
+    <div class="container mt-5 main">
+        <h2 class="text-center mb-3" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">All News</h2>
+
+        <div class="row mb-3">
+            <input id="query" type="text" class="form-control"
+                placeholder="search query* {hint:remove search text and hit enter to get all news}">
+            <span id="error-id" class="d-none text-danger" style="padding-left: 0;">This ID is not found</span>
+        </div>
+
+
+        <div class="row mb-5">
+            <select class="form-select col-lg-10" id="select">
+                <option selected>Open this select menu</option>
+            </select>
+
+            <button id="del" class="btn btn-danger col-lg-1" onclick="deleteNews()">Delete</button>
+            <button class="btn btn-info col-lg-1" onclick="updateNews()">Update</button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr class="row">
+                    <th class="col-lg-2">id</th>
+                    <th class="col-lg-5">title</th>
+                    <th class="col-lg-5">content</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+
+    </div>
+
+    <script src="app.js"></script>
+    <script src="style/js/bootstrap.min.js"></script>
+</body>
+
+</html>
