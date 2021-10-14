@@ -5,4 +5,5 @@ News API for create, read, update and delete news
 - Node.js.
 - Express.js.
 - TypeScript.
+- MongoDb
 - Service Repository Controller pattern.
