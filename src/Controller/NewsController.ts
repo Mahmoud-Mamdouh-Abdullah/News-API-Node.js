@@ -1,27 +1,21 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import { News } from '../Data/Models/News.Model';
+import { NewsService } from '../Services/NewsService';
 
-class News {
-    constructor(public id: number, public title: string, public content: string) {
+let newsService = new NewsService();
+
+export async function createNews(req: Request, res: Response) {
+    try {
+        let title = req.body.title;
+        let content = req.body.content;
+        let news = await newsService.create({ title, content });
+        res.send({news:news});
+    } catch (err: any) {
+        res.status(404).send({ message: err.message });
     }
 }
 
-let id = 4;
-let newsList: News[] = [
-    new News(1, 'Liv vs MCT', 'the result was 2-2'),
-    new News(2, 'Egypt vs Liberia', 'result 2-0'),
-    new News(3, 'Real Madrid vs FCB', 'the match ended 4-0 for RM')
-];
-
-export function createNews(req: Request, res: Response) {
-    let title = req.body.title;
-    let content = req.body.content;
-    let news = new News(id, title, content);
-    newsList.push(news);
-    id++;
-    res.send(news);
-}
-
-export function getAll(req: Request, res: Response) {
+/*export function getAll(req: Request, res: Response) {
     res.send(newsList);
 }
 
@@ -56,4 +50,4 @@ export function deleteNews(req: Request, res: Response) {
     let index = newsList.indexOf(news[0]);
     newsList.splice(index, 1);
     res.send('Deleted Sucessfully');
-}
+}*/

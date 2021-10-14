@@ -20,7 +20,7 @@ app.route(new NewsRouter());
 /**
  * add UI
  */
-app.addUI('../website');
+app.addUI('public');
 
 /**
  * open server

@@ -11,12 +11,17 @@ var NewsRouter = /** @class */ (function () {
     }
     NewsRouter.prototype.getRouter = function () {
         var router = express_1.default.Router();
-        router.get("/", NewsController_1.getAll);
-        router.get("/:id", NewsController_1.getByID);
-        router.get("/query/:q", NewsController_1.getByQuery);
         router.post("/", NewsController_1.createNews);
-        router.put("/:id", NewsController_1.editNews);
-        router.delete("/:id", NewsController_1.deleteNews);
+        /*router.get("/", getAll);
+
+        router.get("/:id", getByID)
+
+        router.get("/query/:q", getByQuery);
+
+
+        router.put("/:id", editNews);
+
+        router.delete("/:id", deleteNews);*/
         return router;
     };
     NewsRouter.prototype.getPath = function () {

@@ -18,19 +18,8 @@ app.route(new NewsRouter_1.NewsRouter());
 /**
  * add UI
  */
-app.addUI('../website');
+app.addUI('public');
 /**
  * open server
  */
 app.listen(5000);
-/*const app = express();
-app.use(bodyParser.json());
-app.use(express.static('../website'));
-
-const newsRouter = new NewsRouter();
-app.use(newsRouter.getPath(), newsRouter.getRouter());
-
-app.listen(5000, () => {
-    console.log('server running...');
-    console.log('server listen to port 5000');
-});*/ 

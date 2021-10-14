@@ -1,7 +1,6 @@
 import { RouteInterface } from "./Interfaces/Router.Interface";
 import express from 'express';
 import { AppMiddlewareInterface } from "./Interfaces/AppMiddleware.interface";
-import bodyParser from "body-parser";
 
 export class Server {
     
