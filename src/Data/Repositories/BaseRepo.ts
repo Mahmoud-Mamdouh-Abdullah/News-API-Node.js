@@ -8,7 +8,15 @@ export abstract class BaseRepo<Model> {
     abstract readonly collectionName: string;
 
     findAll(filter: Object = {}) {
-
+        return new Promise((resolve, reject) => {
+            connectToMongo().then(db => (
+                db.db.collection(this.collectionName).find(filter).toArray(function (err, res) {
+                    if (err) return reject(err);
+                    resolve(res);
+                    db.mongoClient.close();
+                })
+            ));
+        })
     }
 
     insert(model: Model): Promise<ObjectId | undefined> {
@@ -24,12 +32,43 @@ export abstract class BaseRepo<Model> {
         })
     }
 
-    update(id: string) {
+    update(id: string, model: Model) {
+        return new Promise((resolve, reject) => {
+            let _id: ObjectId;
+            try {
+                _id = new ObjectId(id);
+            } catch (err) {
+                return reject("invalid id");
+            }
 
+            connectToMongo().then(db => (
+                db.db.collection(this.collectionName).updateOne({ _id }, { $set: model }, function (err, res) {
+                    if (err) return reject(err);
+                    resolve(res);
+                    db.mongoClient.close();
+                })
+            ))
+
+        })
     }
 
-    delete(id: string, model: Model) {
+    delete(id: string) {
+        return new Promise((resolve, reject) => {
+            let _id: ObjectId;
+            try {
+                _id = new ObjectId(id);
+            } catch (err) {
+                return reject("invalid id");
+            }
 
+            connectToMongo().then((db) => (
+                db.db.collection(this.collectionName).deleteOne({ _id }, function (err, res) {
+                    if (err) return reject(err);
+                    resolve(res);
+                    db.mongoClient.close();
+                })
+            ));
+        });
     }
 
     findById(id: string): Promise<Model> {
@@ -42,7 +81,7 @@ export abstract class BaseRepo<Model> {
             }
 
             connectToMongo().then((d) => {
-                return d.db.collection(this.collectionName).findOne({_id}, function (err, result) {
+                return d.db.collection(this.collectionName).findOne({ _id }, function (err, result) {
                     if (err) return reject(err);
                     resolve(result as Model);
                     d.mongoClient.close();

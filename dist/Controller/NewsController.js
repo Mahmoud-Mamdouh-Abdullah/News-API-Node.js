@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNews = void 0;
+exports.deleteNews = exports.editNews = exports.getById = exports.getByQuery = exports.getAll = exports.createNews = void 0;
 var NewsService_1 = require("../Services/NewsService");
 var newsService = new NewsService_1.NewsService();
 function createNews(req, res) {
@@ -63,39 +63,89 @@ function createNews(req, res) {
     });
 }
 exports.createNews = createNews;
-/*export function getAll(req: Request, res: Response) {
-    res.send(newsList);
-}
-
-export function getByID(req: Request, res: Response) {
-    let id: number = parseInt(req.params.id);
-    let news = newsList.filter(news => news.id == id)[0];
-    if (news == undefined) {
-        res.send({
-            msg: "no such id"
+function getAll(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var news;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, newsService.all()];
+                case 1:
+                    news = _a.sent();
+                    res.send({ news: news });
+                    return [2 /*return*/];
+            }
         });
-    }
-    res.send(news);
+    });
 }
-
-export function getByQuery(req: Request, res: Response) {
-    res.send(newsList.filter(news => news.title.toLowerCase().includes(req.params.q.toLowerCase())
-        || news.content.toLowerCase().includes(req.params.q.toLowerCase())));
+exports.getAll = getAll;
+function getByQuery(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var query, news;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    query = {
+                        $or: [
+                            { title: { $regex: req.params.q, $options: 'i' } },
+                            { content: { $regex: req.params.q, $options: 'i' } }
+                        ]
+                    };
+                    return [4 /*yield*/, newsService.all(query)];
+                case 1:
+                    news = _a.sent();
+                    res.send(news);
+                    return [2 /*return*/];
+            }
+        });
+    });
 }
-
-export function editNews(req: Request, res: Response) {
-    let id: number = parseInt(req.params.id);
-    let news = newsList.filter(news => news.id == id)[0];
-    news.title = req.body.title;
-    news.content = req.body.content;
-    res.send('Updated Successfylly');
+exports.getByQuery = getByQuery;
+function getById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var news;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, newsService.findByIdOrFail(req.params.id)];
+                case 1:
+                    news = _a.sent();
+                    res.send(news);
+                    return [2 /*return*/];
+            }
+        });
+    });
 }
-
-
-export function deleteNews(req: Request, res: Response) {
-    let id: number = parseInt(req.params.id);
-    let news = newsList.filter(news => news.id == id);
-    let index = newsList.indexOf(news[0]);
-    newsList.splice(index, 1);
-    res.send('Deleted Sucessfully');
-}*/ 
+exports.getById = getById;
+function editNews(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var id, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    id = req.params.id;
+                    return [4 /*yield*/, newsService.update(id, { title: req.body.title, content: req.body.content })];
+                case 1:
+                    result = _a.sent();
+                    res.send(result);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.editNews = editNews;
+function deleteNews(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var id, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    id = req.params.id;
+                    return [4 /*yield*/, newsService.delete(id)];
+                case 1:
+                    result = _a.sent();
+                    res.send(result);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteNews = deleteNews;

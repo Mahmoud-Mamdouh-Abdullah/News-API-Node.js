@@ -7,7 +7,16 @@ var BaseRepo = /** @class */ (function () {
     function BaseRepo() {
     }
     BaseRepo.prototype.findAll = function (filter) {
+        var _this = this;
         if (filter === void 0) { filter = {}; }
+        return new Promise(function (resolve, reject) {
+            (0, MongoConnection_1.connectToMongo)().then(function (db) { return (db.db.collection(_this.collectionName).find(filter).toArray(function (err, res) {
+                if (err)
+                    return reject(err);
+                resolve(res);
+                db.mongoClient.close();
+            })); });
+        });
     };
     BaseRepo.prototype.insert = function (model) {
         var _this = this;
@@ -20,9 +29,41 @@ var BaseRepo = /** @class */ (function () {
             })); });
         });
     };
-    BaseRepo.prototype.update = function (id) {
+    BaseRepo.prototype.update = function (id, model) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var _id;
+            try {
+                _id = new bson_1.ObjectId(id);
+            }
+            catch (err) {
+                return reject("invalid id");
+            }
+            (0, MongoConnection_1.connectToMongo)().then(function (db) { return (db.db.collection(_this.collectionName).updateOne({ _id: _id }, { $set: model }, function (err, res) {
+                if (err)
+                    return reject(err);
+                resolve(res);
+                db.mongoClient.close();
+            })); });
+        });
     };
-    BaseRepo.prototype.delete = function (id, model) {
+    BaseRepo.prototype.delete = function (id) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var _id;
+            try {
+                _id = new bson_1.ObjectId(id);
+            }
+            catch (err) {
+                return reject("invalid id");
+            }
+            (0, MongoConnection_1.connectToMongo)().then(function (db) { return (db.db.collection(_this.collectionName).deleteOne({ _id: _id }, function (err, res) {
+                if (err)
+                    return reject(err);
+                resolve(res);
+                db.mongoClient.close();
+            })); });
+        });
     };
     BaseRepo.prototype.findById = function (id) {
         var _this = this;

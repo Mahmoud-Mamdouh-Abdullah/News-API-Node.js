@@ -1,41 +1,46 @@
+let cnt = 1;
 getAll();
 
 const addRow = function (news) {
     let row = document.createElement('tr');
     row.classList.add('row');
     let id = document.createElement('td');
-    id.innerText = news.id;
-    id.classList.add('col-lg-2');
+    id.innerText = news.count;
+    id.classList.add('col-lg-4');
     let title = document.createElement('td');
     title.innerText = news.title;
-    title.classList.add('col-lg-5');
+    title.classList.add('col-lg-4');
     let content = document.createElement('td');
     content.innerText = news.content;
-    content.classList.add('col-lg-5');
+    content.classList.add('col-lg-4');
     row.appendChild(id);
     row.appendChild(title);
     row.appendChild(content);
     document.querySelector('#tbody').appendChild(row);
 }
 
-const addIdToSelect = (id) => {
+const addIdToSelect = (id, count) => {
     let select = document.querySelector('#select');
     let option = document.createElement('option');
     option.value = id;
-    option.innerText = id;
+    option.innerText = count;
     select.appendChild(option);
 }
 
 async function getAll() {
+    cnt = 1;
     document.querySelector('#tbody').innerText = '';
+    let select = document.querySelector('#select');
     select.innerText = '';
     try {
         const res = await fetch('/news');
         let newsList = await res.json();
         console.log(newsList);
-        newsList.forEach(news => {
-            addIdToSelect(news.id);
+        newsList.news.forEach(news => {
+            news.count = cnt;
+            addIdToSelect(news._id, news.count);
             addRow(news);
+            cnt++;
         });
     } catch (err) {
         console.log(`err = ${err}`);
@@ -58,8 +63,11 @@ async function addNews() {
             body: JSON.stringify(news)
         });
         const res = await req.json();
-        addIdToSelect(res.id);
-        addRow(res);
+        res.news.count = cnt;
+        document.querySelector('#title').value = '';
+        document.querySelector('#content').value = '';
+        addIdToSelect(res.news.count);
+        addRow(res.news);
     } catch (err) {
         console.log(err);
     }
@@ -70,25 +78,15 @@ const getByQuery = async function (query) {
         const res = await fetch(`news/query/${query}`);
         const newsList = await res.json();
         document.querySelector('#tbody').innerText = '';
+        document.querySelector('#select').innerHTML = '';
+        let count = 1;
         newsList.forEach(news => {
+            news.count = count;
             addRow(news);
+            addIdToSelect(news._id, news.count);
+            count ++;
         });
         console.log(newsList);
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-const getByID = async function (id) {
-    try {
-        const res = await fetch(`news/${id}`);
-        const news = await res.json();
-        if (news.msg) {
-            document.querySelector('#error-id').classList.remove('d-none');
-            return;
-        }
-        document.querySelector('#tbody').innerText = '';
-        addRow(news);
     } catch (err) {
         console.log(err);
     }
@@ -115,11 +113,7 @@ query.addEventListener("keydown", function (e) {
         if (query.value.length == 0 || query.value == null) {
             getAll();
         } else {
-            if (isNaN(query.value)) {
-                getByQuery(query.value);
-            } else {
-                getByID(query.value);
-            }
+            getByQuery(query.value);
         }
     }
 });
@@ -130,6 +124,7 @@ const updateOnServer = async function () {
         title: document.querySelector('#title').value,
         content: document.querySelector('#content').value
     }
+    console.log(id);
     try {
         const res = await fetch(`/news/${id}`, {
             method: 'PUT',

@@ -43,6 +43,10 @@ var newsRepo = new NewsRepo_1.NewsRepo();
 var NewsService = /** @class */ (function () {
     function NewsService() {
     }
+    NewsService.prototype.all = function (filter) {
+        if (filter === void 0) { filter = {}; }
+        return newsRepo.findAll(filter);
+    };
     NewsService.prototype.create = function (data) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
@@ -55,6 +59,40 @@ var NewsService = /** @class */ (function () {
                     case 1:
                         newsId = ((_a = (_b.sent())) === null || _a === void 0 ? void 0 : _a.toString()) || '';
                         return [2 /*return*/, this.findByIdOrFail(newsId)];
+                }
+            });
+        });
+    };
+    NewsService.prototype.delete = function (id) {
+        var res = newsRepo.delete(id);
+        return res;
+    };
+    NewsService.prototype.update = function (id, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var news, newNews, result, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, this.findByIdOrFail(id)];
+                    case 1:
+                        news = _a.sent();
+                        if (data.title === undefined || data.title.length === 0) {
+                            data.title = news.title;
+                        }
+                        if (data.content === undefined || data.content.length === 0) {
+                            data.content = news.content;
+                        }
+                        newNews = new News_Model_1.News(data.title, data.content);
+                        newNews._id = news._id;
+                        return [4 /*yield*/, newsRepo.update(id, newNews)];
+                    case 2:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                    case 3:
+                        err_1 = _a.sent();
+                        throw new Error(err_1.toString());
+                    case 4: return [2 /*return*/];
                 }
             });
         });

@@ -9,45 +9,42 @@ export async function createNews(req: Request, res: Response) {
         let title = req.body.title;
         let content = req.body.content;
         let news = await newsService.create({ title, content });
-        res.send({news:news});
+        res.send({ news: news });
     } catch (err: any) {
         res.status(404).send({ message: err.message });
     }
 }
 
-/*export function getAll(req: Request, res: Response) {
-    res.send(newsList);
+export async function getAll(req: Request, res: Response) {
+    let news = await newsService.all();
+    res.send({ news: news });
 }
 
-export function getByID(req: Request, res: Response) {
-    let id: number = parseInt(req.params.id);
-    let news = newsList.filter(news => news.id == id)[0];
-    if (news == undefined) {
-        res.send({
-            msg: "no such id"
-        });
-    }
+export async function getByQuery(req: Request, res: Response) {
+    let query = {
+        $or: [
+            { title: { $regex: req.params.q, $options: 'i' } },
+            { content: { $regex: req.params.q, $options: 'i' } }
+        ]
+    };
+    let news = await newsService.all(query);
     res.send(news);
 }
 
-export function getByQuery(req: Request, res: Response) {
-    res.send(newsList.filter(news => news.title.toLowerCase().includes(req.params.q.toLowerCase())
-        || news.content.toLowerCase().includes(req.params.q.toLowerCase())));
+export async function getById(req:Request, res: Response) {
+    let news = await newsService.findByIdOrFail(req.params.id);
+    res.send(news);
 }
 
-export function editNews(req: Request, res: Response) {
-    let id: number = parseInt(req.params.id);
-    let news = newsList.filter(news => news.id == id)[0];
-    news.title = req.body.title;
-    news.content = req.body.content;
-    res.send('Updated Successfylly');
+export async function editNews(req: Request, res: Response) {
+    let id: string = req.params.id;
+    let result = await newsService.update(id, { title: req.body.title, content: req.body.content });
+    res.send(result);
 }
 
 
-export function deleteNews(req: Request, res: Response) {
-    let id: number = parseInt(req.params.id);
-    let news = newsList.filter(news => news.id == id);
-    let index = newsList.indexOf(news[0]);
-    newsList.splice(index, 1);
-    res.send('Deleted Sucessfully');
-}*/
+export async function deleteNews(req: Request, res: Response) {
+    let id: string = req.params.id;
+    let result = await newsService.delete(id);
+    res.send(result);
+}
