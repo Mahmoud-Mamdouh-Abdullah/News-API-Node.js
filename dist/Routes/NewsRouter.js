@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NewsRouter = void 0;
 var express_1 = __importDefault(require("express"));
 var NewsController_1 = require("../Controller/NewsController");
+var AuthMiddleware_1 = require("../Middleware/AuthMiddleware");
 var NewsRouter = /** @class */ (function () {
     function NewsRouter() {
     }
     NewsRouter.prototype.getRouter = function () {
         var router = express_1.default.Router();
+        router.use((new AuthMiddleware_1.AuthMiddleware()).getMiddleware());
         router.post("/", NewsController_1.createNews);
         router.get("/", NewsController_1.getAll);
         router.get("/:id", NewsController_1.getById);

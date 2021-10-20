@@ -1,9 +1,10 @@
 import { ObjectId } from "bson";
 import { Db, MongoClient } from "mongodb";
+import { BaseModel } from "../../Core/Database/BaseModel";
 import { connectToMongo } from "../../Core/Database/MongoConnection";
 
 
-export abstract class BaseRepo<Model> {
+export abstract class BaseRepo<Model extends BaseModel> {
 
     abstract readonly collectionName: string;
 
@@ -20,6 +21,8 @@ export abstract class BaseRepo<Model> {
     }
 
     insert(model: Model): Promise<ObjectId | undefined> {
+        model.created_at = new Date().toISOString();
+        model.updated_at = new Date().toISOString();
         return new Promise((resolve, reject) => {
             connectToMongo().then(db => (
                 db.db.collection(this.collectionName).insertOne(
@@ -33,6 +36,7 @@ export abstract class BaseRepo<Model> {
     }
 
     update(id: string, model: Model) {
+        model.updated_at = new Date().toISOString();
         return new Promise((resolve, reject) => {
             let _id: ObjectId;
             try {
@@ -87,6 +91,18 @@ export abstract class BaseRepo<Model> {
                     d.mongoClient.close();
                 })
             })
+        });
+    }
+
+    findOne(filter:any): Promise<Model> {
+        return new Promise((resolve, reject) => {
+            connectToMongo().then(db => (
+                db.db.collection(this.collectionName).findOne(filter, function (err, res) {
+                    if (err) return reject(err);
+                    resolve(res as Model);
+                    db.mongoClient.close();
+                })
+            ))
         });
     }
 }

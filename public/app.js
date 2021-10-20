@@ -33,7 +33,11 @@ async function getAll() {
     let select = document.querySelector('#select');
     select.innerText = '';
     try {
-        const res = await fetch('/news');
+        const res = await fetch('/news', {
+            headers: {
+                token:"xGbI5NHMdMSusgmodK7Rqms97iTjSuXS2rRNw1c7OfA="
+            }
+        });
         let newsList = await res.json();
         console.log(newsList);
         newsList.news.forEach(news => {

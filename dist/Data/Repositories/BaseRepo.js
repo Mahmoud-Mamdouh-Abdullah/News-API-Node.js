@@ -20,6 +20,8 @@ var BaseRepo = /** @class */ (function () {
     };
     BaseRepo.prototype.insert = function (model) {
         var _this = this;
+        model.created_at = new Date().toISOString();
+        model.updated_at = new Date().toISOString();
         return new Promise(function (resolve, reject) {
             (0, MongoConnection_1.connectToMongo)().then(function (db) { return (db.db.collection(_this.collectionName).insertOne(model, function (err, res) {
                 if (err)
@@ -31,6 +33,7 @@ var BaseRepo = /** @class */ (function () {
     };
     BaseRepo.prototype.update = function (id, model) {
         var _this = this;
+        model.updated_at = new Date().toISOString();
         return new Promise(function (resolve, reject) {
             var _id;
             try {
@@ -83,6 +86,17 @@ var BaseRepo = /** @class */ (function () {
                     d.mongoClient.close();
                 });
             });
+        });
+    };
+    BaseRepo.prototype.findOne = function (filter) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            (0, MongoConnection_1.connectToMongo)().then(function (db) { return (db.db.collection(_this.collectionName).findOne(filter, function (err, res) {
+                if (err)
+                    return reject(err);
+                resolve(res);
+                db.mongoClient.close();
+            })); });
         });
     };
     return BaseRepo;

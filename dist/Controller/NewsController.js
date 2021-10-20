@@ -65,14 +65,21 @@ function createNews(req, res) {
 exports.createNews = createNews;
 function getAll(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var news;
+        var news, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, newsService.all()];
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, newsService.all()];
                 case 1:
                     news = _a.sent();
-                    res.send({ news: news });
-                    return [2 /*return*/];
+                    res.send({ news: news, user: req.body.user });
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_1 = _a.sent();
+                    res.status(404).send({ message: e_1.message });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
@@ -80,7 +87,7 @@ function getAll(req, res) {
 exports.getAll = getAll;
 function getByQuery(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var query, news;
+        var query, news, e_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -90,11 +97,19 @@ function getByQuery(req, res) {
                             { content: { $regex: req.params.q, $options: 'i' } }
                         ]
                     };
-                    return [4 /*yield*/, newsService.all(query)];
+                    _a.label = 1;
                 case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, newsService.all(query)];
+                case 2:
                     news = _a.sent();
                     res.send(news);
-                    return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_2 = _a.sent();
+                    res.status(404).send({ message: e_2.message });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -102,14 +117,21 @@ function getByQuery(req, res) {
 exports.getByQuery = getByQuery;
 function getById(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var news;
+        var news, e_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, newsService.findByIdOrFail(req.params.id)];
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, newsService.findByIdOrFail(req.params.id)];
                 case 1:
                     news = _a.sent();
                     res.send(news);
-                    return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_3 = _a.sent();
+                    res.status(404).send({ message: e_3.message });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
@@ -117,16 +139,24 @@ function getById(req, res) {
 exports.getById = getById;
 function editNews(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, result;
+        var id, result, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     id = req.params.id;
-                    return [4 /*yield*/, newsService.update(id, { title: req.body.title, content: req.body.content })];
+                    _a.label = 1;
                 case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, newsService.update(id, { title: req.body.title, content: req.body.content })];
+                case 2:
                     result = _a.sent();
                     res.send(result);
-                    return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_2 = _a.sent();
+                    res.status(404).send({ message: err_2.message });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -134,16 +164,24 @@ function editNews(req, res) {
 exports.editNews = editNews;
 function deleteNews(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, result;
+        var id, result, e_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     id = req.params.id;
-                    return [4 /*yield*/, newsService.delete(id)];
+                    _a.label = 1;
                 case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, newsService.delete(id)];
+                case 2:
                     result = _a.sent();
                     res.send(result);
-                    return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_4 = _a.sent();
+                    res.status(404).send({ message: e_4.message });
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });

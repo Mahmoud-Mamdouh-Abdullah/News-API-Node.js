@@ -16,8 +16,13 @@ export async function createNews(req: Request, res: Response) {
 }
 
 export async function getAll(req: Request, res: Response) {
-    let news = await newsService.all();
-    res.send({ news: news });
+    try {
+        let news = await newsService.all();
+        res.send({ news: news, user: req.body.user });
+    } catch (e: any) {
+        res.status(404).send({ message: e.message });
+    }
+
 }
 
 export async function getByQuery(req: Request, res: Response) {
@@ -27,24 +32,43 @@ export async function getByQuery(req: Request, res: Response) {
             { content: { $regex: req.params.q, $options: 'i' } }
         ]
     };
-    let news = await newsService.all(query);
-    res.send(news);
+    try {
+        let news = await newsService.all(query);
+        res.send(news);
+    } catch (e: any) {
+        res.status(404).send({ message: e.message });
+    }
+
 }
 
-export async function getById(req:Request, res: Response) {
-    let news = await newsService.findByIdOrFail(req.params.id);
-    res.send(news);
+export async function getById(req: Request, res: Response) {
+    try {
+        let news = await newsService.findByIdOrFail(req.params.id);
+        res.send(news);
+    } catch (e: any) {
+        res.status(404).send({ message: e.message });
+    }
 }
 
 export async function editNews(req: Request, res: Response) {
     let id: string = req.params.id;
-    let result = await newsService.update(id, { title: req.body.title, content: req.body.content });
-    res.send(result);
+    try {
+        let result = await newsService.update(id, { title: req.body.title, content: req.body.content });
+        res.send(result);
+    } catch (err: any) {
+        res.status(404).send({ message: err.message });
+    }
+
 }
 
 
 export async function deleteNews(req: Request, res: Response) {
     let id: string = req.params.id;
-    let result = await newsService.delete(id);
-    res.send(result);
+    try {
+        let result = await newsService.delete(id);
+        res.send(result);
+    } catch (e: any) {
+        res.status(404).send({ message: e.message });
+    }
+
 }
